@@ -5,6 +5,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `InitializeModuleFolderForDeltaReport` in `.build/DscConfigurationTasks.ps1` no
+  longer silently ignores module copy failures. A failed `Copy-Item` now
+  throws immediately, naming the module (`$_.BaseName`), instead of letting
+  the task finish with a stale preinstalled module that could cause
+  `New-M365DSCDeltaReport` to generate and publish an incorrect report.
+
 ### Added
 
 - Initial Upload

@@ -15,6 +15,14 @@ source and destination tenants.
 
 ## Recent milestones
 
+- 2026-09-06 Fixed `InitializeModuleFolderForDeltaReport` in
+  `.build/DscConfigurationTasks.ps1`: `Copy-Item` used
+  `-ErrorAction SilentlyContinue`, so a failed module copy left a stale
+  preinstalled module in place and the task finished successfully, letting
+  `New-M365DSCDeltaReport` generate and publish an incorrect report instead of
+  failing before artifact publication. Copy failures now throw, naming the
+  module via `$_.BaseName`.
+
 - 2026-09-06 Added a tenant delta-report workflow. The branch now includes a
   `deltaReport` workflow in `build.yaml`, the task implementation in
   `.build/DscConfigurationTasks.ps1`, the report generator in

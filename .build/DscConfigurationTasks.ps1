@@ -114,12 +114,15 @@ task InitializeModuleFolderForDeltaReport {
 
     Write-Host "Copying modules from '$requiredModulesPath' to '$programFileModulePath'"
     Get-ChildItem -Path $requiredModulesPath | ForEach-Object {
-        Write-Host "Copying module '$($_.BaseName)'"
-        $_ | Copy-Item -Destination $programFileModulePath -Recurse -Force -ErrorAction SilentlyContinue -ErrorVariable copyErrors
-
-        if ($copyErrors)
+        $module = $_
+        Write-Host "Copying module '$($module.BaseName)'"
+        try
         {
-            Write-Host "There were $($copyErrors.Count) errors copying the module '$($_.BaseName)'"
+            $module | Copy-Item -Destination $programFileModulePath -Recurse -Force -ErrorAction Stop
+        }
+        catch
+        {
+            throw "Failed to copy module '$($module.BaseName)' to '$programFileModulePath': $_"
         }
     }
 
