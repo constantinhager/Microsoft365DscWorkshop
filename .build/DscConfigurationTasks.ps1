@@ -75,7 +75,7 @@ task CleanModuleFolder {
 
     Wait-DscLocalConfigurationManager
 
-    dir -Path $programFileModulePath |
+    Get-ChildItem -Path $programFileModulePath |
         Where-Object { $_.BaseName -notin $modulesToKeep } |
             Remove-Item -Recurse -Force
 
@@ -88,6 +88,25 @@ task InitializeModuleFolder {
     {
         Write-Error 'The build environment is not set'
     }
+
+    Wait-DscLocalConfigurationManager
+
+    $programFileModulePath = 'C:\Program Files\WindowsPowerShell\Modules'
+
+    Write-Host "Copying modules from '$requiredModulesPath' to '$programFileModulePath'"
+    Get-ChildItem -Path $requiredModulesPath | ForEach-Object {
+        Write-Host "Copying module '$($_.BaseName)'"
+        $_ | Copy-Item -Destination $programFileModulePath -Recurse -Force -ErrorAction SilentlyContinue -ErrorVariable copyErrors
+
+        if ($copyErrors)
+        {
+            Write-Host "There were $($copyErrors.Count) errors copying the module '$($_.BaseName)'"
+        }
+    }
+
+}
+
+task InitializeModuleFolderForDeltaReport {
 
     Wait-DscLocalConfigurationManager
 
