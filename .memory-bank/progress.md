@@ -1,6 +1,6 @@
 ---
 status: current
-last-verified: 2026-08-17
+last-verified: 2026-09-06
 owner: active-agent
 source: repository evidence
 ---
@@ -9,10 +9,20 @@ source: repository evidence
 
 ## Current status
 
-The build is green on `feature/update2608` with the dependency set updated to
-August 2026 levels.
+The current branch is `feature/deltapipeline` and the active work is the new
+export-to-delta-report workflow for comparing tenant configuration drift across
+source and destination tenants.
 
 ## Recent milestones
+
+- 2026-09-06 Added a tenant delta-report workflow. The branch now includes a
+  `deltaReport` workflow in `build.yaml`, the task implementation in
+  `.build/DscConfigurationTasks.ps1`, the report generator in
+  `.build/Export/DeltaReport.ps1`, and the pipeline definition in
+  `pipelines/deltaReport.yml`. The workflow downloads exported configuration
+  artifacts, validates the source tenant, merges per-tenant config sets using
+  `Join-M365DSCConfiguration`, compares them with `New-M365DSCDeltaReport`, and
+  publishes `output/DeltaReport` as an Azure DevOps artifact.
 
 - 2026-08-17 Fixed `.\build.ps1` failing in `TestConfigData` with Pester 6.1.0's
   `A 'break' or 'continue' statement ... escaped from your code`. That message is
